@@ -71,6 +71,15 @@ button,a{touch-action:manipulation}button{font:inherit;cursor:pointer}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .acts a{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 8px;border-radius:13px;font-weight:700;text-decoration:none;font-size:16px;color:#fff}
 .acts a:active{transform:scale(.97)}.wa{background:var(--wa)}.call{background:var(--navy2)}
+.av img{width:100%;height:100%;object-fit:cover;border-radius:50%}.av.ph{padding:0;overflow:hidden;border:3px solid var(--gold);background:var(--navy2)}
+.vf{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#1d9bf0;color:#fff;font-size:12px;margin-inline-start:6px;vertical-align:middle}
+.shop{margin:10px 0 0;font-size:14.5px;font-weight:700}.shop small{display:block;color:var(--mute);font-weight:400}
+.pks{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}.pks span{border:1px solid var(--gold);border-radius:8px;padding:1px 9px;font-size:12.5px}
+.hrs{margin:8px 0 0;font-size:13px;color:var(--mute)}
+.svs{margin:8px 0 0;font-size:13.5px;color:var(--mute)}.svs b{color:var(--ink)}
+.more{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.more a{flex:1 1 auto;text-align:center;text-decoration:none;font-weight:700;font-size:14px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--navy);color:var(--ink)}
+.more a.mp{background:var(--gold);border-color:var(--gold);color:var(--navy)}
 .empty{background:var(--card);border:2px dashed var(--line);border-radius:18px;padding:26px 18px;text-align:center;color:var(--mute)}
 .empty button{margin-top:10px;background:var(--navy);color:#fff;border:0;border-radius:12px;padding:10px 18px}
 .sk{height:150px;border-radius:20px;background:linear-gradient(90deg,var(--line) 25%,var(--card) 50%,var(--line) 75%);background-size:200% 100%;animation:sh 1s infinite}@keyframes sh{to{background-position:-200% 0}}
@@ -301,20 +310,43 @@ const np=v=>v.replace(/[\s-]/g,""),intl=p=>"962"+np(p).slice(1);
 const SHOW_DEMO=true;           // اجعلها false عند الإطلاق لإخفاء المعلمين التجريبيين
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 let wkTok=0;
+const FULLCOLS="user_id,full_name,trade,governorate,bio,years,phone,whatsapp,accepting,phones,shop_name,shop_address,lat,lng,maps_url,photo_url,work_hours,perks,services,extra_trades,instagram,facebook,website,verified";
 async function fetchReal(){
   if(!sb)return[];
-  let q=sb.from("provider_profiles").select("full_name,trade,governorate,bio,years,phone,whatsapp,accepting").eq("published",true).eq("trade",selT[0]);
-  if(selG>=0)q=q.eq("governorate",selG);
-  const r=await q.limit(50);return r.error?[]:(r.data||[]);
+  const mk=(cols,ex)=>{let q=sb.from("provider_profiles").select(cols).eq("published",true);
+    q=ex?q.or(`trade.eq.${selT[0]},extra_trades.cs.{${selT[0]}}`):q.eq("trade",selT[0]);
+    if(selG>=0)q=q.eq("governorate",selG);return q.limit(50)};
+  let r=await mk(FULLCOLS,true);
+  if(r.error)r=await mk("full_name,trade,governorate,bio,years,phone,whatsapp,accepting",false);   // احتياط إذا ما انشغّل ملف SQL
+  return r.error?[]:(r.data||[]);
 }
+const safeUrl=u=>/^https?:\/\//i.test(u||"")?u:"";
+const PK={emg:"🚨 طوارئ ٢٤ ساعة",home:"🏠 بجيلك للبيت",free:"🆓 كشف مجاني",war:"🛡️ كفالة على الشغل",fast:"⚡ وصول سريع",inv:"🧾 فاتورة رسمية",cliq:"💳 بقبل CliQ",mat:"🧰 المواد متوفرة",fem:"👩 فنيّة نساء"};
+const DY=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+function hrsTxt(h){if(!h||(!h.days&&!h.allday))return"";if(h.allday)return"🕒 شغّال ٢٤ ساعة";const d=(h.days||[]).slice().sort();if(!d.length)return"";
+  const s=d.length===7?"كل يوم":d.join()==="0,1,2,3,4"?"الأحد – الخميس":d.join()==="0,1,2,3,4,5"?"الأحد – الجمعة":d.map(i=>DY[i]).join("، ");return`🕒 ${s} · ${h.from||""} – ${h.to||""}`}
 function cardHtml(w,i){
-  const nm=esc(w.name),m=encodeURIComponent(t("msg").replace("{n}",w.name).replace("{t}",selT[2+L()]));
-  return `<article class="card" style="animation-delay:${i*70}ms"><div class="who"><div class="av" aria-hidden="true">${esc(w.name.replace("م. ","").replace("Eng. ","").charAt(0))}</div><div><h3>${nm}${w.demo?`<span class="tag">${t("demo")}</span>`:""}</h3><div class="meta">${selT[2+L()]} · ${GOV[w.g][L()]} · ${esc(w.y)} ${t("yrs")} · ${t("unv")}</div></div></div><p class="desc">${esc(w.desc)}</p><div class="acts"><a class="wa" href="https://wa.me/${intl(w.wa)}?text=${m}" target="_blank" rel="noopener">${t("wa")}</a><a class="call" href="tel:${np(w.ph)}">${t("call")}</a></div></article>`;
+  const nm=esc(w.name),m=encodeURIComponent(t("msg").replace("{n}",w.name).replace("{t}",selT[2+L()])),x=w.x||{};
+  const photo=safeUrl(x.photo_url),ini=esc(w.name.replace("م. ","").replace("Eng. ","").charAt(0));
+  const av=photo?`<div class="av ph" aria-hidden="true"><img src="${esc(photo)}" alt="" loading="lazy" decoding="async"></div>`:`<div class="av" aria-hidden="true">${ini}</div>`;
+  const shop=(x.shop_name||x.shop_address)?`<div class="shop">${x.shop_name?"🏪 "+esc(x.shop_name):""}${x.shop_address?`<small>📍 ${esc(x.shop_address)}</small>`:""}</div>`:"";
+  const pks=(x.perks||[]).filter(k=>PK[k]).map(k=>`<span>${PK[k]}</span>`).join("");
+  const hrs=hrsTxt(x.work_hours);
+  const sv=(Array.isArray(x.services)?x.services:[]).slice(0,6).map(v=>esc(v.name)+(v.price?` <b>(${esc(v.price)})</b>`:"")).join(" · ");
+  const extra=(x.extra_trades||[]).map(id=>{const r=TR.find(q=>q[0]===id);return r?r[1]+" "+r[2+L()]:""}).filter(Boolean).join(" · ");
+  const map=x.lat!=null&&x.lng!=null?`https://www.google.com/maps?q=${x.lat},${x.lng}`:safeUrl(x.maps_url);
+  const others=(Array.isArray(x.phones)?x.phones:[]).filter(p=>p&&p.n&&np(p.n)!==np(w.ph||""));
+  const more=[map?`<a class="mp" href="${esc(map)}" target="_blank" rel="noopener">📍 ${L()?"Location":"الموقع على الخريطة"}</a>`:"",
+    ...others.map(p=>`<a href="tel:${esc(np(p.n))}" dir="ltr">📞 ${esc(p.label||"")} ${esc(p.n)}</a>`),
+    x.instagram?`<a href="https://instagram.com/${esc(String(x.instagram).replace(/^@|^https?:\/\/(www\.)?instagram\.com\//i,"").replace(/\/$/,""))}" target="_blank" rel="noopener">Instagram</a>`:"",
+    safeUrl(x.facebook)?`<a href="${esc(safeUrl(x.facebook))}" target="_blank" rel="noopener">Facebook</a>`:"",
+    safeUrl(x.website)?`<a href="${esc(safeUrl(x.website))}" target="_blank" rel="noopener">🌐</a>`:""].filter(Boolean).join("");
+  return `<article class="card" style="animation-delay:${i*70}ms"><div class="who">${av}<div><h3>${nm}${x.verified?'<span class="vf" title="موثّق">✓</span>':""}${w.demo?`<span class="tag">${t("demo")}</span>`:""}</h3><div class="meta">${selT[2+L()]}${extra?" + "+esc(extra):""} · ${GOV[w.g][L()]} · ${esc(w.y)} ${t("yrs")}${w.demo?" · "+t("unv"):""}</div></div></div>${shop}${pks?`<div class="pks">${pks}</div>`:""}<p class="desc">${esc(w.desc)}</p>${sv?`<div class="svs">🧰 ${sv}</div>`:""}${hrs?`<div class="hrs">${esc(hrs)}</div>`:""}<div class="acts" style="margin-top:12px"><a class="wa" href="https://wa.me/${intl(w.wa)}?text=${m}" target="_blank" rel="noopener">${t("wa")}</a><a class="call" href="tel:${np(w.ph)}">${t("call")}</a></div>${more?`<div class="more">${more}</div>`:""}</article>`;
 }
 async function workers(load){
   const box=$("list"),tok=++wkTok;
   if(load)box.innerHTML='<div class="sk"></div><div class="sk"></div>';
-  const real=(await fetchReal()).map(r=>({name:r.full_name,g:r.governorate,y:r.years||0,desc:r.bio||selT[6+L()],ph:r.phone,wa:r.whatsapp||r.phone,demo:false}));
+  const real=(await fetchReal()).map(r=>({name:r.full_name,g:r.governorate,y:r.years||0,desc:r.bio||selT[6+L()],ph:r.phone,wa:r.whatsapp||r.phone,demo:false,x:r}));
   if(tok!==wkTok)return;
   const demo=SHOW_DEMO?WK.filter(w=>w.t===selT[0]&&(selG<0||w.g===selG)).map(w=>({name:w.n[L()],g:w.g,y:w.y,desc:selT[6+L()],ph:w.ph,wa:w.ph,demo:true})):[];
   const all=real.concat(demo);
