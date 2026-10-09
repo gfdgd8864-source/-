@@ -307,7 +307,7 @@ $("govs").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)r
   setTimeout(()=>$("s3").scrollIntoView({behavior:"smooth"}),120)});
 $("start").onclick=()=>$("s1").scrollIntoView({behavior:"smooth"});
 const np=v=>v.replace(/[\s-]/g,""),intl=p=>"962"+np(p).slice(1);
-const SHOW_DEMO=true;           // اجعلها false عند الإطلاق لإخفاء المعلمين التجريبيين
+const SHOW_DEMO=false;           // اجعلها false عند الإطلاق لإخفاء المعلمين التجريبيين
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 let wkTok=0;
 const FULLCOLS="user_id,full_name,trade,governorate,bio,years,phone,whatsapp,accepting,phones,shop_name,shop_address,lat,lng,maps_url,photo_url,work_hours,perks,services,extra_trades,instagram,facebook,website,verified";
