@@ -329,7 +329,7 @@ const open=id=>$(id).classList.add("on"),shut=id=>$(id).classList.remove("on");
 document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m||e.target.hasAttribute("data-close"))m.classList.remove("on")}));
 addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".modal.on").forEach(m=>m.classList.remove("on"))});
 $("bSet").onclick=()=>open("mSet");$("sDone").onclick=()=>shut("mSet");
-$("bLogin").onclick=()=>{if(user){sb.auth.signOut();return}mode="c";openLog()};$("bPro").onclick=()=>{mode="p";openLog()};
+$("bLogin").onclick=()=>{if(user){sb.auth.signOut();return}mode="c";openLog()};$("bPro").onclick=()=>{location.href="join.html"};
 function openLog(){$("lt").textContent=t(mode==="c"?"lt_c":"lt_p");$("pm").textContent="";$("em").value="";$("pw").value="";$("otpBox").hidden=true;$("otp").value="";wantPro=mode==="p";open("mLog")}
 const bind=(g,k)=>$(g).addEventListener("click",e=>{const b=e.target.closest("button");if(b){D[k]=b.dataset.v;apply()}});
 bind("gLang","lang");bind("gTheme","theme");bind("gFont","fz");bind("gMotion","rm");
