@@ -95,6 +95,16 @@ footer{background:var(--navy);color:#b9c4dc;text-align:center;padding:24px;font-
 .x{width:100%;margin-top:10px;background:none;border:1.5px solid var(--line);color:var(--ink);border-radius:13px;padding:12px}
 .lbl{font-size:14px;font-weight:600;display:block;margin-bottom:6px}
 .info{background:rgba(212,162,58,.14);border:1px solid var(--gold);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:14px}
+
+.tb[hidden]{display:none}
+.tb.acct{display:flex;align-items:center;gap:8px;max-width:52vw;padding:5px 12px 5px 6px}
+.tb.acct span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;max-width:34vw}
+.av2,.av3{flex:none;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,var(--gold),var(--gold2));color:var(--navy);font-weight:800}
+.av2{width:28px;height:28px;font-size:14px}
+.av3{width:52px;height:52px;font-size:22px}
+.accrow{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+.accem{font-weight:700;word-break:break-all;direction:ltr;text-align:start}
+.accrole{color:var(--mute);font-size:14px}
 </style>
 </head>
 <body>
@@ -103,6 +113,7 @@ footer{background:var(--navy);color:#b9c4dc;text-align:center;padding:24px;font-
   <span class="logo">صَنعة<b> .</b></span>
   <button class="tb" id="bLogin" data-i="login"></button>
   <button class="tb gold" id="bPro" data-i="pro"></button>
+  <button class="tb acct" id="bAcc" hidden aria-label="account"><span class="av2" id="bAccAv"></span><span id="bAccTxt"></span></button>
   <button class="tb ic" id="bSet" aria-label="settings">⚙️</button>
 </header>
 
@@ -142,6 +153,15 @@ footer{background:var(--navy);color:#b9c4dc;text-align:center;padding:24px;font-
   <div class="grp"><span data-i="s_motion"></span><div class="seg" id="gMotion"><button data-v="0" data-i="on"></button><button data-v="1" data-i="off"></button></div></div>
   <button class="cta2" id="sDone" data-i="done"></button>
   <button class="x" id="sReset" data-i="reset"></button>
+</div></div>
+
+<!-- account -->
+<div class="modal" id="mAcc" role="dialog" aria-modal="true"><div class="box">
+  <h2 data-i="acc"></h2>
+  <div class="accrow"><span class="av3" id="accAv"></span><div><div class="accem" id="accEm"></div><div class="accrole" id="accRole"></div></div></div>
+  <button class="cta2" id="accSet" data-i="toset"></button>
+  <button class="x" id="accOut" data-i="out"></button>
+  <button class="x" data-close data-i="close"></button>
 </div></div>
 
 <!-- login -->
@@ -191,7 +211,7 @@ cnt:"معلم",wa:"💬 واتساب",call:"📞 اتصال",demo:"تجريبي"
 note:"ملاحظة: الأسماء والأرقام والأوصاف تجريبية لعرض التصميم فقط. بدّلها ببيانات حقيقية من مصفوفة WK.",foot:"التواصل مباشر بين الزبون والمعلم",
 s_lang:"اللغة",s_theme:"الإضاءة",s_font:"حجم الخط",s_motion:"الحركة",auto:"تلقائي",light:"فاتح",dark:"داكن",on:"مفعّلة",off:"متوقفة",done:"تم",reset:"إعادة الضبط",
 lt_c:"تسجيل دخول الزبون",lt_p:"دخول المعلمين",authnote:"سجّل بالإيميل وكلمة السر. أرقام الهواتف تبقى غير موثّقة لأن التحقق يحتاج SMS مدفوع.",
-phone:"رقم الموبايل",email:"الإيميل",code:"رمز التحقق من الإيميل",verify:"تأكيد الرمز",checkc:"أرسلنا رمز تحقق لإيميلك. اكتبه هنا.",badc:"اكتب الرمز الذي وصلك (أرقام فقط)",pass:"كلمة السر (8 أحرف على الأقل)",signin:"دخول",signup:"إنشاء حساب جديد",out:"خروج",unv:"الرقم غير موثّق",e_mail:"اكتب إيميل صحيح",e_pass:"كلمة السر لازم 8 أحرف على الأقل",nocfg:"الربط غير مكتمل: ضع SB_URL و SB_KEY في أول الكود.",check:"تم إنشاء الحساب. افتح الإيميل واضغط رابط التأكيد.",welcome:"أهلاً بك!",cont:"متابعة",close:"إغلاق",perr:"رقم الهاتف غير صحيح، أدخل رقم أردني مكوّن من 10 أرقام ويبدأ بـ 07",pok:"الصيغة صحيحة، لكن الدخول غير متصل بعد.",
+phone:"رقم الموبايل",email:"الإيميل",code:"رمز التحقق من الإيميل",acc:"حسابي",role_c:"حساب زبون",role_p:"حساب معلم / مقدم خدمة",toset:"إعدادات الموقع",verify:"تأكيد الرمز",checkc:"أرسلنا رمز تحقق لإيميلك. اكتبه هنا.",badc:"اكتب الرمز الذي وصلك (أرقام فقط)",pass:"كلمة السر (8 أحرف على الأقل)",signin:"دخول",signup:"إنشاء حساب جديد",out:"خروج",unv:"الرقم غير موثّق",e_mail:"اكتب إيميل صحيح",e_pass:"كلمة السر لازم 8 أحرف على الأقل",nocfg:"الربط غير مكتمل: ضع SB_URL و SB_KEY في أول الكود.",check:"تم إنشاء الحساب. افتح الإيميل واضغط رابط التأكيد.",welcome:"أهلاً بك!",cont:"متابعة",close:"إغلاق",perr:"رقم الهاتف غير صحيح، أدخل رقم أردني مكوّن من 10 أرقام ويبدأ بـ 07",pok:"الصيغة صحيحة، لكن الدخول غير متصل بعد.",
 msg:"مرحبا {n}، شفت ملفك على صَنعة وبدي خدمة {t}."},
 en:{login:"Log in",pro:"For pros",set:"Settings",h1:"The right craftsman, closer to you",h1p:"Pick a trade and an area, then contact the pro directly by call or WhatsApp.",start:"Find a pro ↓",
 t1:"What trade do you need?",t1s:"Pick one and we'll show the areas.",t2:"Which area?",t3:"Available pros",all:"All governorates",s2:"Choose your area for ",s2e:", or see all.",
@@ -199,7 +219,7 @@ cnt:"pros",wa:"💬 WhatsApp",call:"📞 Call",demo:"Demo",yrs:"yrs experience",
 note:"Note: names, numbers and descriptions are demo data to show the design. Replace them with real data in the WK array.",foot:"Customers and pros deal directly",
 s_lang:"Language",s_theme:"Appearance",s_font:"Text size",s_motion:"Motion",auto:"Auto",light:"Light",dark:"Dark",on:"On",off:"Off",done:"Done",reset:"Reset",
 lt_c:"Customer log in",lt_p:"Pro log in",authnote:"Sign in with email and password. Phone numbers stay unverified because verification needs paid SMS.",
-phone:"Mobile number",email:"Email",code:"Email verification code",verify:"Confirm code",checkc:"We sent a verification code to your email. Enter it here.",badc:"Enter the code you received (digits only)",pass:"Password (min 8 characters)",signin:"Log in",signup:"Create account",out:"Log out",unv:"Number not verified",e_mail:"Enter a valid email",e_pass:"Password needs at least 8 characters",nocfg:"Not connected: set SB_URL and SB_KEY at the top of the code.",check:"Account created. Open your email and click the confirmation link.",welcome:"Welcome!",cont:"Continue",close:"Close",perr:"Invalid number. Enter a 10-digit Jordanian number starting with 07",pok:"Format is valid, but login is not connected yet.",
+phone:"Mobile number",email:"Email",code:"Email verification code",acc:"My account",role_c:"Customer account",role_p:"Provider account",toset:"Site settings",verify:"Confirm code",checkc:"We sent a verification code to your email. Enter it here.",badc:"Enter the code you received (digits only)",pass:"Password (min 8 characters)",signin:"Log in",signup:"Create account",out:"Log out",unv:"Number not verified",e_mail:"Enter a valid email",e_pass:"Password needs at least 8 characters",nocfg:"Not connected: set SB_URL and SB_KEY at the top of the code.",check:"Account created. Open your email and click the confirmation link.",welcome:"Welcome!",cont:"Continue",close:"Close",perr:"Invalid number. Enter a 10-digit Jordanian number starting with 07",pok:"Format is valid, but login is not connected yet.",
 msg:"Hello {n}, I found you on SANAAH and need {t} service."}};
 
 const $=id=>document.getElementById(id),D={lang:"ar",theme:"auto",fz:"1",rm:"0"};
@@ -216,7 +236,7 @@ function apply(){
   document.querySelectorAll("[data-i]").forEach(e=>e.textContent=t(e.dataset.i));
   [["gLang","lang"],["gTheme","theme"],["gFont","fz"],["gMotion","rm"]].forEach(([g,k])=>$(g).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===D[k])));
   try{localStorage.setItem("cfg",JSON.stringify(D))}catch(e){}
-  nowTxt();renderTrades();
+  nowTxt();renderTrades();if(typeof renderAcc==="function")renderAcc();
   if(selT){govChips();workers(false)}
 }
 
@@ -288,7 +308,26 @@ async function doAuth(up){
 }
 $("vbtn").onclick=async()=>{const c=$("otp").value.trim();if(!/^\d{6,8}$/.test(c))return authMsg(t("badc"),"err");if(!sb)return authMsg(t("nocfg"),"err");const r=await sb.auth.verifyOtp({email:pend,token:c,type:"signup"});if(r.error)return authMsg(r.error.message,"err");authMsg(t("welcome"),"ok");$("otpBox").hidden=true;setTimeout(()=>shut("mLog"),900)};
 $("lgo").onclick=()=>doAuth(false);$("sup").onclick=()=>doAuth(true);
-if(sb)sb.auth.onAuthStateChange((_e,s)=>{user=s?s.user:null;$("bLogin").dataset.i=user?"out":"login";$("bLogin").textContent=t(user?"out":"login")});
+let urole=null;
+function renderAcc(){
+  if(!user)return;
+  const l=(user.email||"?").charAt(0).toUpperCase();
+  $("bAccAv").textContent=$("accAv").textContent=l;
+  $("bAccTxt").textContent=$("accEm").textContent=user.email||"";
+  $("accRole").textContent=urole?t(urole==="provider"?"role_p":"role_c"):"";
+}
+async function onUser(s){
+  user=s?s.user:null;
+  $("bLogin").hidden=$("bPro").hidden=!!user;
+  $("bAcc").hidden=!user;
+  if(!user){urole=null;return}
+  renderAcc();
+  try{const r=await sb.from("profiles").select("role").eq("id",user.id).maybeSingle();urole=r.data?r.data.role:null;renderAcc()}catch(e){}
+}
+$("bAcc").onclick=()=>{renderAcc();open("mAcc")};
+$("accSet").onclick=()=>{shut("mAcc");open("mSet")};
+$("accOut").onclick=async()=>{await sb.auth.signOut();shut("mAcc")};
+if(sb)sb.auth.onAuthStateChange((_e,s)=>{onUser(s)});
 apply();
 </script>
 </body>
